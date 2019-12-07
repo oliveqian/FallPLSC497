@@ -6,16 +6,17 @@ library(data.table)
 library(reshape2)
 library(reshape)
 options(scipen = 999)
-
+#init
+setwd("C:/Users/pasaa/Desktop/PLSC497_project")
 FDI <- read_excel("FDI.xlsx")
 GDP_C <- read_excel('GDP_C.xlsx')
 percent_GDP <-read_excel('research_as%of_GDP.xlsx')
-rm(education_c)
 setnames(FDI, "year", "Year")
 rail <- read_excel('rail_length.xlsx')
-jour_num <- Journal_numbers
+jour_num <- read_excel('Journal_numbers.xlsx')
+education <- read_excel('education_c.xlsx')
 
-rm(Merged)
+
 Merged_fdi <- merge(FDI, GDP_C, by="Year")
 #this is the relation 
 p1 <- ggplot(Merged_fdi, aes(x = FDI, y = Merged_fdi$GDP))+
@@ -29,10 +30,18 @@ merged_fdi_percent <- merge(Merged_fdi, percent_GDP,by = "Year")
 p2 <- ggplot(merged_fdi_percent, aes(x = merged_fdi_percent$Year))+
   geom_line(aes( y = merged_fdi_percent$`as % of GDP`), size = 1.5, colour = "blue", linetype = "solid")+
   geom_line(aes( y = merged_fdi_percent$GDP), size = 1.5, colour = "black", linetype = "solid")
-#relstion between research expenditure as % of Gdp and GDP
+
+
+#relation between research expenditure as % of Gdp and GDP
 p3 <- ggplot(merged_fdi_percent, aes(x = merged_fdi_percent$`as % of GDP`, y = merged_fdi_percent$GDP))+
   geom_line()+
   geom_point(size = 1, color = "red")
+
+#plot for the realtion between 
+merge_edu_GDP <- merge(GDP_C, education, by = "Year")
+p5 <- ggplot()
+
+
 #drop 2 comuns in education
 education <- education[-c(1:2)]
 # test on all variables
@@ -47,7 +56,7 @@ merge_jour_edu <- merge(GDP_C, education, by = "Year")
 merge_jour_edu <- merge(merge_jour_edu, jour_num, by  ="Year")
 sum_jour_edu <- lm(merge_jour_edu$GDP~merge_jour_edu$Index+merge_jour_edu$`Journal Number`)
 sum_jour_edu_star <- summary(sum_jour_edu)
-
+# p4 is the graph
 p4<- ggplot(merge_jour_edu, aes( x = merge_jour_edu$Index, y = merge_jour_edu$GDP))+
   geom_point()+
   geom_abline(intercept = sum_jour_edu_star$coefficients[1]+sum_jour_edu_star$coefficients[3]*mean(merge_jour_edu$`Journal Number`),
@@ -71,3 +80,4 @@ stargazer(multi_re,type = 'html',out = 'multi_re.htm',
           covariate.labels = c("FDI","Expenditure", "Journal Numbers","Rail length", "Education index")
 )
 shell.exec('multi_re.htm')
+
