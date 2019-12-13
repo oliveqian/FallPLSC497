@@ -18,6 +18,7 @@ education <- read_excel('education_c.xlsx')
 education_russia <- read_excel('education_c_v.xlsx')
 GDP_R <- read_excel('GDP_R.xlsx')
 FDI_R <- read_excel('FDI_R.xlsx')
+percent_GDP_R <- read_excel('research_as%_R.xlsx')
 
 
 
@@ -30,7 +31,7 @@ p1 <- ggplot(Merged_fdi, aes(x = FDI, y = Merged_fdi$GDP))+
 
 merged_fdi_percent <- merge(Merged_fdi, percent_GDP,by = "Year")
 
-#this is the graph depicting the realtionship between GDP and research expenditure as % of GDP
+#this is the graph depicting the trend of research expenditure as % of GDP and GDP growth of China
 p2 <- ggplot(merged_fdi_percent, aes(x = merged_fdi_percent$Year))+
   geom_line(aes( y = merged_fdi_percent$`as % of GDP`), size = 1.5, colour = "blue", linetype = "solid")+
   geom_line(aes( y = merged_fdi_percent$GDP), size = 1.5, colour = "black", linetype = "solid")
@@ -122,7 +123,23 @@ p8 <- ggplot(merge_FDI_R)+
   geom_point(aes(x = merge_FDI_R$FDI, y = merge_FDI_R$GDP_R))+
   geom_smooth(aes(x = merge_FDI_R$FDI, y = merge_FDI_R$GDP_R ),method = "lm")+
   labs(title = "Relationship between FDI and GDP of Russia", caption = "data from World Bank", x = "FDI", y = "GDP")
-  
+
+#this is the graph depicting the trend of research expenditure as % of GDP and GDP growth of Russia
+merge_GDP_percent_r <- merge(percent_GDP_R, GDP_R, by = "Year")
+
+p9 <- ggplot(merge_GDP_percent_r, aes(x = Year))+
+  geom_line(aes( y = merge_GDP_percent_r$`as_%`), size = 1.5, colour = "blue", linetype = "solid")+
+  geom_line(aes( y = merge_GDP_percent_r$GDP_R), size = 1.5, colour = "black", linetype = "solid")+
+  labs(title = "Trend of GDP growth and Research expenditure as % of GDP Comparison in Russua", caption = "data from World Bank", x = "Year", y = "Percentage")+
+  annotate("text", x = 2000, y = 11, label = "GDP growth rate", color = "black", size = 4)+
+  annotate("text", x = 2003, y = 0, label = "Research expenditure as % of GDP", color = "blue", size =4)
+
+#control a variable
+merge
+
+# bonus points
+
+
 
 
 
